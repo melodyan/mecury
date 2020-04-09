@@ -1,22 +1,12 @@
 <template>
   <div id="app">
-    <Login msg="欢迎来到登录页面"/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import Login from "./components/Login.vue";
-
 export default {
-  name: 'App',
-  components: {
-    Login
-  }
+  name: 'App'
 }
 </script>
 
-<style>
-#app {
-  margin: -8px -8px 0px -8px;
-}
-</style>
