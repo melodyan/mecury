@@ -93,7 +93,22 @@
                 this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
             },
             handleLogin() {//登录验证
-
+                this.$refs.loginForm.validate(valid => {
+                    if (valid) {//如果都校验成功
+                        this.loading = true
+                        this.$store.dispatch('user/login', this.loginForm)
+                            .then(() => {
+                                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                                this.loading = false
+                            })
+                            .catch(() => {
+                                this.loading = false
+                            })
+                    } else {
+                        console.log('error submit!!')
+                        return false
+                    }
+                })
             },
             showPwd() {//是否显示密码的判断
                 if (this.passwordType === 'password') {
@@ -108,41 +123,26 @@
         }
     }
 </script>
+
 <style lang="scss">
-    /* 修复input 背景不协调 和光标变色 */
-    /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-    $bg:#283443;
-    $light_gray:#fff;
+    $bg: #2d3a4b;
     $cursor: #fff;
+    $light_gray: #eee;
 
-    @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-        .login-container .el-input input {
-            color: $cursor;
-        }
-    }
+    .login-container{
 
-    /* reset element-ui css */
-    .login-container {
+
         .el-input {
             display: inline-block;
             height: 47px;
             width: 85%;
-
-            input {
+            input{
                 background: transparent;
-                border: 0px;
-                -webkit-appearance: none;
-                border-radius: 0px;
                 padding: 12px 5px 12px 15px;
                 color: $light_gray;
                 height: 47px;
                 caret-color: $cursor;
-
-                &:-webkit-autofill {
-                    box-shadow: 0 0 0px 1000px $bg inset !important;
-                    -webkit-text-fill-color: $cursor !important;
-                }
+                border: 0px;
             }
         }
 
@@ -161,30 +161,18 @@
     $light_gray:#eee;
 
     .login-container {
-        min-height: 100%;
-        width: 100%;
+        height: 100%;
+        overflow: hidden;
         background-color: $bg;
         overflow: hidden;
 
-        .login-form {
-            position: relative;
+        .login-form{
+            /*border: 1px solid black;*/
             width: 520px;
             max-width: 100%;
             padding: 160px 35px 0;
             margin: 0 auto;
             overflow: hidden;
-        }
-
-        .tips {
-            font-size: 14px;
-            color: #fff;
-            margin-bottom: 10px;
-
-            span {
-                &:first-of-type {
-                    margin-right: 16px;
-                }
-            }
         }
 
         .svg-container {
@@ -217,18 +205,6 @@
             user-select: none;
         }
 
-        .thirdparty-button {
-            position: absolute;
-            right: 0;
-            bottom: 6px;
-        }
-
-        @media only screen and (max-width: 470px) {
-            .thirdparty-button {
-                display: none;
-            }
-        }
     }
 </style>
-
 
